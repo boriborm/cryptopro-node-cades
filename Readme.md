@@ -18,7 +18,7 @@
 Инструкия по установке pycades со всеми необходимым ссылками, указанными выше, находится по [ссылке](https://docs.cryptopro.ru/cades/pycades/pycades-build).
 Саму pycades собирать не нужно!
    
-5. В проект cryptopro-node-cades в папку src скопировать из архива pycades:
+5. В проект `cryptopro-node-cades` в папку `src` скопировать из архива `pycades`:
     - файл `cpstldll.h`;
     - каталог `cplib`;
     

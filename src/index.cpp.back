@@ -1,0 +1,51 @@
+#include "index.h"
+
+using namespace CryptoPro::PKI::CAdES;
+
+void print_bytes( const char *title, const unsigned char *buf, size_t buf_len) {
+   size_t i = 0;
+   fprintf(stdout, "%s\n", title);
+   for(i = 0; i < buf_len; ++i)
+       fprintf(stdout, "%02X%s", buf[i], ( i + 1 ) % 16 == 0 ? "\r\n" : " " );
+   fprintf(stdout,"\n");
+}
+
+Napi::Value Decrypt(const Napi::CallbackInfo& info) {
+
+  Napi::Env env = info.Env();
+
+  COUNT_OF_ARGUMENTS_CHECK(info, env, 1);
+
+  if (!info[0].IsBuffer()) {
+    Napi::TypeError::New(env, "Wrong arguments").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+
+  Napi::Uint8Array arr = info[0].As<Napi::Uint8Array>();
+
+  //print_bytes( "test", arr.Data(), arr.ByteLength());
+
+
+  CryptoPro::CBlob blobData;
+  blobData.assign((unsigned char *) arr.Data(), arr.ByteLength());
+
+  CPPCadesCPEnvelopedDataObject *cadesEnvelopedData = new CPPCadesCPEnvelopedDataObject();
+
+  HRESULT result = cadesEnvelopedData->Decrypt(blobData);
+
+  HR_METHOD_ERRORCHECK_RETURN(env, "Decrypt error: 0x%08X", result);
+
+  CStringBlob blobContent;
+  result = cadesEnvelopedData->get_Content(blobContent);
+  HR_METHOD_ERRORCHECK_RETURN(env, "Get content error: 0x%08X", result);
+
+  return Napi::String::New(env, blobContent.GetString());;
+}
+
+Napi::Object Init(Napi::Env env, Napi::Object exports) {
+//  exports.Set(Napi::String::New(env, "encrypt"), Napi::Function::New(env, Encrypt));
+  exports.Set(Napi::String::New(env, "decrypt"), Napi::Function::New(env, Decrypt));
+  return exports;
+}
+
+NODE_API_MODULE(addon, Init)

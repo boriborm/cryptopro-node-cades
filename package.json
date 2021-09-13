@@ -1,0 +1,20 @@
+{
+  "name": "node-crypto-test",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./test/index.js",
+    "compile": "node-gyp rebuild"
+  },
+  "keywords": [],
+  "author": "Maksim Borodulin",
+  "license": "ISC",
+  "dependencies": {
+
+  },
+  "gypfile": true,
+  "devDependencies": {
+    "node-addon-api": "^4.1.0"
+  },
+  "description": "Библиотека для работы с Crypto CSP"
+}

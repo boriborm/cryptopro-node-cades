@@ -22,8 +22,6 @@ namespace NodeCades {
       Napi::HandleScope scope(env);
       boost::shared_ptr<CPPCadesCPSignerObject> cadesSigner1 (new CPPCadesCPSignerObject());
       cadesSigner = cadesSigner1;
-      //CPPCadesCPSignerObject* cadesSigner1 = new CPPCadesCPSignerObject();
-      cadesSigner = cadesSigner1;
     };
 
     void Signer::setCertificate(const Napi::CallbackInfo& info, const Napi::Value& value) {

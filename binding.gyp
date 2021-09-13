@@ -12,6 +12,7 @@
         "./src/Recipients.cpp",
         "./src/Store.cpp",
         "./src/Signer.cpp",
+        "./src/HashedData.cpp",
         "./src/SignedData.cpp",
 
       ],

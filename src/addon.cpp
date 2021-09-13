@@ -4,6 +4,7 @@
 #include "Recipients.h"
 #include "Store.h"
 #include "Signer.h"
+#include "HashedData.h"
 #include "SignedData.h"
 
 
@@ -14,7 +15,9 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   NodeCades::Certificate::Init(env, exports);
   NodeCades::Recipients::Init(env, exports);
   NodeCades::Signer::Init(env, exports);
+  NodeCades::HashedData::Init(env, exports);
   NodeCades::SignedData::Init(env, exports);
+
 
   //_CADESCOM_STORE_LOCATION
   exports.Set("CADESCOM_MEMORY_STORE", Napi::Number::New(env, CADESCOM_MEMORY_STORE));
@@ -44,6 +47,21 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   exports.Set("CADESCOM_CADES_BES", Napi::Number::New(env, CADESCOM_CADES_BES));
   exports.Set("CADESCOM_CADES_DEFAULT", Napi::Number::New(env, CADESCOM_CADES_DEFAULT));
   exports.Set("CADESCOM_PKCS7_TYPE", Napi::Number::New(env, CADESCOM_PKCS7_TYPE));
+
+  //_CAPICOM_HASH_ALGORITHM
+  exports.Set("CAPICOM_HASH_ALGORITHM_SHA1", Napi::Number::New(env, CAPICOM_HASH_ALGORITHM_SHA1));
+  exports.Set("CAPICOM_HASH_ALGORITHM_MD2", Napi::Number::New(env, CAPICOM_HASH_ALGORITHM_MD2));
+  exports.Set("CAPICOM_HASH_ALGORITHM_MD4", Napi::Number::New(env, CAPICOM_HASH_ALGORITHM_MD4));
+  exports.Set("CAPICOM_HASH_ALGORITHM_MD5", Napi::Number::New(env, CAPICOM_HASH_ALGORITHM_MD5));
+  exports.Set("CAPICOM_HASH_ALGORITHM_SHA_256", Napi::Number::New(env, CAPICOM_HASH_ALGORITHM_SHA_256));
+  exports.Set("CAPICOM_HASH_ALGORITHM_SHA_384", Napi::Number::New(env, CAPICOM_HASH_ALGORITHM_SHA_384));
+  exports.Set("CAPICOM_HASH_ALGORITHM_SHA_512", Napi::Number::New(env, CAPICOM_HASH_ALGORITHM_SHA_512));
+  exports.Set("CADESCOM_HASH_ALGORITHM_CP_GOST_3411", Napi::Number::New(env, CADESCOM_HASH_ALGORITHM_CP_GOST_3411));
+  exports.Set("CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256", Napi::Number::New(env, CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256));
+  exports.Set("CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512", Napi::Number::New(env, CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512));
+  exports.Set("CADESCOM_HASH_ALGORITHM_CP_GOST_3411_HMAC", Napi::Number::New(env, CADESCOM_HASH_ALGORITHM_CP_GOST_3411_HMAC));
+  exports.Set("CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256_HMAC", Napi::Number::New(env, CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256_HMAC));
+  exports.Set("CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512_HMAC", Napi::Number::New(env, CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512_HMAC));
 
   return exports;
 

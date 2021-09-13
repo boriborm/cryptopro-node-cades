@@ -9,8 +9,10 @@ namespace NodeCades {
     void SignedData::Init(Napi::Env env, Napi::Object exports){
         Napi::HandleScope scope(env);
         Napi::Function ctor = DefineClass(env, "SignedData", {
-            InstanceMethod("signCades", &SignedData::signCades),
-            InstanceMethod("verifyCades", &SignedData::verifyCades),
+            InstanceMethod("signCades", &SignedData::SignCades),
+            InstanceMethod("signHash", &SignedData::SignHash),
+            InstanceMethod("verifyCades", &SignedData::VerifyCades),
+            InstanceMethod("verifyHash", &SignedData::VerifyHash),
             InstanceAccessor("content", &SignedData::getContent, &SignedData::setContent),
         });
         exports.Set("SignedData", ctor);
@@ -25,7 +27,29 @@ namespace NodeCades {
       cadesSignedData = new CPPCadesSignedDataObject();
     };
 
-    Napi::Value SignedData::signCades(const Napi::CallbackInfo& info) {
+    void SignedData::setContent(const Napi::CallbackInfo& info, const Napi::Value& value) {
+        Napi::Env env = info.Env();
+
+        if (!value.IsString()) {
+            Napi::TypeError::New(env, "SignedData content wrong value").ThrowAsJavaScriptException();
+            return;
+        }
+
+        std::string szContent = value.As<Napi::String>().Utf8Value();
+        CAtlString sContent = CAtlString(szContent.c_str());
+        HRESULT result = this->cadesSignedData->put_Content(sContent.GetString(), sContent.GetLength());
+        HR_METHOD_ERRORCHECK(env, "SignedData set content error: 0x%08X", result);
+    }
+
+    Napi::Value SignedData::getContent(const Napi::CallbackInfo& info) {
+        Napi::Env env = info.Env();
+        CStringBlob blobContent;
+        HRESULT result = this->cadesSignedData->get_Content(blobContent);
+        HR_METHOD_ERRORCHECK_RETURN(env, "SignedData get content error: 0x%08X", result);
+        return Napi::String::New(env, blobContent.GetString());
+    }
+
+    Napi::Value SignedData::SignCades(const Napi::CallbackInfo& info) {
 
       Napi::Env env = info.Env();
       COUNT_OF_ARGUMENTS_CHECK(info, env, 1);
@@ -33,7 +57,6 @@ namespace NodeCades {
       int iCadesType = CADESCOM_CADES_DEFAULT;
       int iEncodingType = CAPICOM_ENCODE_BASE64;
       BOOL bDetached = false;
-
 
       if (!info[0].IsObject()) {
         Napi::TypeError::New(env, "First parameter must be Signer").ThrowAsJavaScriptException();
@@ -65,29 +88,7 @@ namespace NodeCades {
 
     }
 
-    void SignedData::setContent(const Napi::CallbackInfo& info, const Napi::Value& value) {
-        Napi::Env env = info.Env();
-
-        if (!value.IsString()) {
-            Napi::TypeError::New(env, "SignedData content wrong value").ThrowAsJavaScriptException();
-            return;
-        }
-
-        std::string szContent = value.As<Napi::String>().Utf8Value();
-        CAtlString sContent = CAtlString(szContent.c_str());
-        HRESULT result = this->cadesSignedData->put_Content(sContent.GetString(), sContent.GetLength());
-        HR_METHOD_ERRORCHECK(env, "SignedData set content error: 0x%08X", result);
-    }
-
-    Napi::Value SignedData::getContent(const Napi::CallbackInfo& info) {
-        Napi::Env env = info.Env();
-        CStringBlob blobContent;
-        HRESULT result = this->cadesSignedData->get_Content(blobContent);
-        HR_METHOD_ERRORCHECK_RETURN(env, "SignedData get content error: 0x%08X", result);
-        return Napi::String::New(env, blobContent.GetString());
-    }
-
-    Napi::Value SignedData::verifyCades(const Napi::CallbackInfo& info) {
+    Napi::Value SignedData::VerifyCades(const Napi::CallbackInfo& info) {
 
       Napi::Env env = info.Env();
       COUNT_OF_ARGUMENTS_CHECK(info, env, 1);
@@ -103,7 +104,6 @@ namespace NodeCades {
       blobData.assign((unsigned char *) arr.Data(), arr.ByteLength());
 
       int iCadesType = CADESCOM_CADES_DEFAULT;
-      int iEncodingType = CAPICOM_ENCODE_BASE64;
       BOOL bDetached = false;
 
       if (info[1].IsNumber()) {
@@ -116,10 +116,85 @@ namespace NodeCades {
       }
 
       HRESULT result = this->cadesSignedData->VerifyCades(blobData, cadesType, bDetached);
-      if (result = CRYPT_E_SIGNER_NOT_FOUND) {
+      if (result == CRYPT_E_SIGNER_NOT_FOUND) {
         return Napi::Boolean::New(env, false);
       }
       else HR_METHOD_ERRORCHECK_RETURN(env, "SignedData verifyCades error: 0x%08X", result);
+
+      return Napi::Boolean::New(env, true);
+
+    }
+
+    Napi::Value SignedData::SignHash(const Napi::CallbackInfo& info) {
+
+      Napi::Env env = info.Env();
+      COUNT_OF_ARGUMENTS_CHECK(info, env, 2);
+
+      int iCadesType = CADESCOM_CADES_DEFAULT;
+      int iEncodingType = CAPICOM_ENCODE_BASE64;
+
+      if (!info[0].IsObject()) {
+        Napi::TypeError::New(env, "First parameter must be HashedData").ThrowAsJavaScriptException();
+        return env.Undefined();
+      }
+      HashedData* hashedData = HashedData::Unwrap(info[0].As<Napi::Object>());
+
+      if (!info[1].IsObject()) {
+        Napi::TypeError::New(env, "Second parameter must be Signer").ThrowAsJavaScriptException();
+        return env.Undefined();
+      }
+      Signer* signer = Signer::Unwrap(info[1].As<Napi::Object>());
+
+      if (info[2].IsNumber()) {
+        iCadesType = (int) info[2].As<Napi::Number>().Uint32Value();
+      }
+      CADESCOM_CADES_TYPE cadesType = (CADESCOM_CADES_TYPE)iCadesType;
+
+      if (info[3].IsNumber()) {
+        iEncodingType = (int) info[3].As<Napi::Number>().Uint32Value();
+      }
+      CAPICOM_ENCODING_TYPE encodingType = (CAPICOM_ENCODING_TYPE)iEncodingType;
+
+      CryptoPro::CBlob blobSignedMessage;
+      HRESULT result = this->cadesSignedData->SignHash(signer->cadesSigner, hashedData->cadesHashedData, cadesType, encodingType, &blobSignedMessage);
+      HR_METHOD_ERRORCHECK_RETURN(env, "SignedData signHashed error: 0x%08X", result);
+
+      return Napi::Buffer<char>::Copy(env, (const char *) blobSignedMessage.pbData(), blobSignedMessage.cbData());
+
+    }
+
+    Napi::Value SignedData::VerifyHash(const Napi::CallbackInfo& info) {
+
+      Napi::Env env = info.Env();
+      COUNT_OF_ARGUMENTS_CHECK(info, env, 2);
+
+      if (!info[0].IsObject()) {
+        Napi::TypeError::New(env, "SignedData verifyHash wrong arguments").ThrowAsJavaScriptException();
+        return env.Null();
+      }
+
+      if (!info[1].IsBuffer()) {
+        Napi::TypeError::New(env, "SignedData verifyHash wrong arguments").ThrowAsJavaScriptException();
+        return env.Null();
+      }
+      HashedData* hashedData = HashedData::Unwrap(info[0].As<Napi::Object>());
+      Napi::Uint8Array arr = info[1].As<Napi::Uint8Array>();
+
+      int iCadesType = CADESCOM_CADES_DEFAULT;
+
+      if (info[2].IsNumber()) {
+        iCadesType = (int) info[2].As<Napi::Number>().Uint32Value();
+      }
+      CADESCOM_CADES_TYPE cadesType = (CADESCOM_CADES_TYPE)iCadesType;
+
+      CryptoPro::CBlob blobData;
+      blobData.assign((unsigned char *) arr.Data(), arr.ByteLength());
+
+      HRESULT result = this->cadesSignedData->VerifyHash(hashedData->cadesHashedData, blobData, cadesType);
+      if (result == CRYPT_E_SIGNER_NOT_FOUND) {
+        return Napi::Boolean::New(env, false);
+      }
+      else HR_METHOD_ERRORCHECK_RETURN(env, "SignedData verifyHash error: 0x%08X", result);
 
       return Napi::Boolean::New(env, true);
 

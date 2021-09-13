@@ -1,5 +1,5 @@
 {
-  "name": "node-crypto-test",
+  "name": "crypto-node-cades",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -16,5 +16,5 @@
   "devDependencies": {
     "node-addon-api": "^4.1.0"
   },
-  "description": "Библиотека для работы с Crypto CSP"
+  "description": "Библиотека для работы с КриптоПро CSP"
 }

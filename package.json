@@ -6,7 +6,7 @@
     "test": "node ./test/index.js",
     "compile": "node-gyp rebuild"
   },
-  "keywords": [],
+  "keywords": ["CryptoPro","КриптоПро"],
   "author": "Maksim Borodulin",
   "license": "ISC",
   "dependencies": {

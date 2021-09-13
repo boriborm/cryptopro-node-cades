@@ -1,5 +1,5 @@
 {
-  "name": "crypto-node-cades",
+  "name": "cryptopro-node-cades",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -8,13 +8,17 @@
   },
   "keywords": ["CryptoPro","КриптоПро"],
   "author": "Maksim Borodulin",
-  "license": "ISC",
-  "dependencies": {
-
-  },
+  "license": "MIT",
+  "dependencies": {},
   "gypfile": true,
   "devDependencies": {
     "node-addon-api": "^4.1.0"
   },
-  "description": "Библиотека для работы с КриптоПро CSP"
+  "description": "Библиотека для работы с КриптоПро CSP",
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/boriborm/cryptopro-node-cades.git"
+  }
+
 }

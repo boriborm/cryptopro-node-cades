@@ -70,6 +70,9 @@ if (testSignCades) {
   signer.checkCertificate = true;
   const signData = new Cades.SignedData();
   signData.content = testText;
-  const sign = signData.signCades(signer, Cades.CADESCOM_CADES_BES, false, Cades.CAPICOM_ENCODE_BASE64);
+  let sign = signData.signCades(signer, Cades.CADESCOM_CADES_BES, false, Cades.CAPICOM_ENCODE_BASE64);
   console.log(sign.toString());
+  const signer2 = new Cades.SignedData();
+  //sign = Buffer.from('123');
+  console.log("verify sign:", signer2.verifyCades(sign, Cades.CADESCOM_CADES_BES));
 }

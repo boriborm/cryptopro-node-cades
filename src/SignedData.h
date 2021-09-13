@@ -14,6 +14,7 @@ namespace NodeCades {
         Napi::Value signCades(const Napi::CallbackInfo& info);
         void setContent(const Napi::CallbackInfo& info, const Napi::Value& value);
         Napi::Value getContent(const Napi::CallbackInfo& info);
+        Napi::Value verifyCades(const Napi::CallbackInfo& info);
      private:
         CPPCadesSignedDataObject* cadesSignedData;
         static Napi::FunctionReference constructor;

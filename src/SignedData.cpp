@@ -10,6 +10,7 @@ namespace NodeCades {
         Napi::HandleScope scope(env);
         Napi::Function ctor = DefineClass(env, "SignedData", {
             InstanceMethod("signCades", &SignedData::signCades),
+            InstanceMethod("verifyCades", &SignedData::verifyCades),
             InstanceAccessor("content", &SignedData::getContent, &SignedData::setContent),
         });
         exports.Set("SignedData", ctor);
@@ -86,4 +87,41 @@ namespace NodeCades {
         return Napi::String::New(env, blobContent.GetString());
     }
 
+    Napi::Value SignedData::verifyCades(const Napi::CallbackInfo& info) {
+
+      Napi::Env env = info.Env();
+      COUNT_OF_ARGUMENTS_CHECK(info, env, 1);
+
+      if (!info[0].IsBuffer()) {
+        Napi::TypeError::New(env, "SignedData verifyCades wrong arguments").ThrowAsJavaScriptException();
+        return env.Null();
+      }
+
+      Napi::Uint8Array arr = info[0].As<Napi::Uint8Array>();
+
+      CryptoPro::CBlob blobData;
+      blobData.assign((unsigned char *) arr.Data(), arr.ByteLength());
+
+      int iCadesType = CADESCOM_CADES_DEFAULT;
+      int iEncodingType = CAPICOM_ENCODE_BASE64;
+      BOOL bDetached = false;
+
+      if (info[1].IsNumber()) {
+        iCadesType = (int) info[1].As<Napi::Number>().Uint32Value();
+      }
+      CADESCOM_CADES_TYPE cadesType = (CADESCOM_CADES_TYPE)iCadesType;
+
+      if (info[2].IsBoolean()) {
+        BOOL bDetached = info[2].ToBoolean();
+      }
+
+      HRESULT result = this->cadesSignedData->VerifyCades(blobData, cadesType, bDetached);
+      if (result = CRYPT_E_SIGNER_NOT_FOUND) {
+        return Napi::Boolean::New(env, false);
+      }
+      else HR_METHOD_ERRORCHECK_RETURN(env, "SignedData verifyCades error: 0x%08X", result);
+
+      return Napi::Boolean::New(env, true);
+
+    }
 }

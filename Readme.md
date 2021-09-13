@@ -1,7 +1,7 @@
 # cryptopro-node-cades
 
 Модуль Node.js, используемый для работы с КриптоПро библиотекой.
-Данная библиотека на текущий момент была протестирована только на Node.Js версии 14.17 и на операционной системе Ubuntu 20.04. Версия Node.Js должна поддерживать Node-API (https://nodejs.org/api/n-api.html#n_api_node_api). 
+Данная библиотека на текущий момент была протестирована только на Node.Js версии 14.17 и на операционной системе Ubuntu 20.04. Версия Node.Js должна поддерживать [Node-API](https://nodejs.org/api/n-api.html#n_api_node_api). 
 
 ## Установка
 
@@ -12,10 +12,10 @@
     - Библиотека PKCS #11;
     - cptools, многоцелевое графическое приложение; (опционально)
 
-2. Скачать КриптоПро SDK (https://cryptopro.ru/products/cades/downloads) и установить `cprocsp-pki-cades`
+2. Скачать [КриптоПро SDK](https://cryptopro.ru/products/cades/downloads) и установить `cprocsp-pki-cades`
 3. Установить пакет `lsb-cprocsp-devel` из дистрибутива CryptoPro
-4. В стандартных пакетах отсутствуют некоторые файлы, которые нужно взять из архива pycades по ссылке https://cryptopro.ru/sites/default/files/products/cades/pycades/pycades.zip
-Инструкия по установке pycades со всеми необходимым ссылками, указанными выше, находится по ссылке https://docs.cryptopro.ru/cades/pycades/pycades-build.
+4. В стандартных пакетах отсутствуют некоторые файлы, которые нужно взять из архива pycades по [ссылке](https://cryptopro.ru/sites/default/files/products/cades/pycades/pycades.zip).
+Инструкия по установке pycades со всеми необходимым ссылками, указанными выше, находится по [ссылке](https://docs.cryptopro.ru/cades/pycades/pycades-build).
 Саму pycades собирать не нужно!
    
 5. В проект cryptopro-node-cades в папку src скопировать из архива pycades:

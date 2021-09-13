@@ -70,14 +70,19 @@ if (testSignCades) {
   const signer1 = new Cades.Signer()
   signer1.certificate = cert;
   signer1.checkCertificate = true;
-  const signData = new Cades.SignedData();
-  signData.content = testText;
+  const signData1 = new Cades.SignedData();
+  signData1.content = testText;
   // sign - Buffer
-  let sign = signData.signCades(signer1, Cades.CADESCOM_CADES_BES, false, Cades.CAPICOM_ENCODE_BASE64);
+  let sign = signData1.signCades(signer1, Cades.CADESCOM_CADES_BES, false, Cades.CAPICOM_ENCODE_BASE64);
   console.log('signed data:');
   console.log(sign.toString());
-  const signer2 = new Cades.SignedData();
-  console.log("verify sign:", signer2.verifyCades(sign, Cades.CADESCOM_CADES_BES));
+  const signData2 = new Cades.SignedData();
+  console.log("verify sign:", signData2.verifyCades(sign, Cades.CADESCOM_CADES_BES));
+  const signers1 = signData2.signers;
+  for (const signer of signers1){
+    const cert = signer.certificate;
+    printCertificate(cert);
+  }
 }
 
 if (testSignHash) {
@@ -95,12 +100,17 @@ if (testSignHash) {
   console.log("Hash algorithm:", hash.algorithm);
   hash.hash(testText);
 
-  const signData = new Cades.SignedData();
-  signData.content = testText;
-  let sign = signData.signHash(hash, signer3, Cades.CADESCOM_CADES_BES, false, Cades.CAPICOM_ENCODE_BASE64);
+  const signData3 = new Cades.SignedData();
+  signData3.content = testText;
+  let sign = signData3.signHash(hash, signer3, Cades.CADESCOM_CADES_BES, false, Cades.CAPICOM_ENCODE_BASE64);
   console.log('signed hash:');
   console.log(sign.toString());
-  const signer4 = new Cades.SignedData();
-  console.log("verify hash sign:", signer4.verifyHash(hash, sign, Cades.CADESCOM_CADES_BES));
+  const signData4 = new Cades.SignedData();
+  console.log("verify hash sign:", signData4.verifyHash(hash, sign, Cades.CADESCOM_CADES_BES));
+  const signers2 = signData4.signers;
+  for (const signer of signers2){
+    const cert = signer.certificate;
+    printCertificate(cert);
+  }
 
 }

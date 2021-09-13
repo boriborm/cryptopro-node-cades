@@ -11,12 +11,14 @@ namespace NodeCades {
      public:
         static void Init(Napi::Env env, Napi::Object exports);
         Signer(const Napi::CallbackInfo& info);
+        static Napi::Object New(Napi::Env env, boost::shared_ptr<CPPCadesCPSignerObject>* cadesSigner);
+
         void setCertificate(const Napi::CallbackInfo& info, const Napi::Value& value);
         Napi::Value getCertificate(const Napi::CallbackInfo& info);
         void setCheckCertificate(const Napi::CallbackInfo& info, const Napi::Value& value);
         Napi::Value getCheckCertificate(const Napi::CallbackInfo& info);
         boost::shared_ptr<CPPCadesCPSignerObject> cadesSigner;
-        //CPPCadesCPSignerObject* cadesSigner;
+
      private:
         static Napi::FunctionReference constructor;
     };

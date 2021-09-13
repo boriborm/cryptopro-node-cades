@@ -20,9 +20,19 @@ namespace NodeCades {
     Signer::Signer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Signer>(info) {
       Napi::Env env = info.Env();
       Napi::HandleScope scope(env);
-      boost::shared_ptr<CPPCadesCPSignerObject> cadesSigner1 (new CPPCadesCPSignerObject());
-      cadesSigner = cadesSigner1;
+
+      if (info.Length() == 1 && info[0].Type() == napi_external) {
+        cadesSigner = *(info[0].As<Napi::External<boost::shared_ptr<CPPCadesCPSignerObject>>>().Data());
+      } else {
+        boost::shared_ptr<CPPCadesCPSignerObject> cadesSigner1 (new CPPCadesCPSignerObject());
+        cadesSigner = cadesSigner1;
+      }
+
     };
+
+    Napi::Object Signer::New(Napi::Env env, boost::shared_ptr<CPPCadesCPSignerObject>* cadesSigner) {
+      return Signer::constructor.Value().New({Napi::External<boost::shared_ptr<CPPCadesCPSignerObject>>::New(env, cadesSigner)});
+    }
 
     void Signer::setCertificate(const Napi::CallbackInfo& info, const Napi::Value& value) {
       Napi::Env env = info.Env();

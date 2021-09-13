@@ -14,6 +14,7 @@ namespace NodeCades {
             InstanceMethod("verifyCades", &SignedData::VerifyCades),
             InstanceMethod("verifyHash", &SignedData::VerifyHash),
             InstanceAccessor("content", &SignedData::getContent, &SignedData::setContent),
+            InstanceAccessor("signers", &SignedData::getSigners, nullptr),
         });
         exports.Set("SignedData", ctor);
 
@@ -198,5 +199,31 @@ namespace NodeCades {
 
       return Napi::Boolean::New(env, true);
 
+    }
+
+    Napi::Value SignedData::getSigners(const Napi::CallbackInfo& info) {
+
+      Napi::Env env = info.Env();
+
+      boost::shared_ptr<CPPCadesCPSignersObject> cadesSigners;
+      HRESULT result = this->cadesSignedData->get_Signers(cadesSigners);
+      HR_METHOD_ERRORCHECK_RETURN(env, "SignedData getSigners error: 0x%08X", result);
+
+      unsigned int signersCount;
+      result = cadesSigners->get_Count(&signersCount);
+      HR_METHOD_ERRORCHECK_RETURN(env, "SignedData getSigners getCount error: 0x%08X", result);
+
+      Napi::Array signers = Napi::Array::New(env, signersCount);
+
+      boost::shared_ptr<CPPCadesCPSignerObject> cadesSigner;
+
+      for (unsigned int i = 0; i < signersCount; i++) {
+
+        result = cadesSigners->get_Item(i+1, cadesSigner);
+        HR_METHOD_ERRORCHECK_RETURN(env, "SignedData getSigners getItem() error: 0x%08X", result);
+        signers[i] = Signer::New(env, &cadesSigner);
+      }
+
+      return signers;
     }
 }

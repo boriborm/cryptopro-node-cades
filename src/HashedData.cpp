@@ -9,8 +9,8 @@ namespace NodeCades {
         Napi::HandleScope scope(env);
         Napi::Function ctor = DefineClass(env, "HashedData", {
             InstanceAccessor("algorithm", &HashedData::getAlgorithm, &HashedData::setAlgorithm),
+            InstanceAccessor("value", &HashedData::getValue, nullptr),
             InstanceMethod("hash", &HashedData::Hash)
-            //InstanceAccessor("checkCertificate", &Signer::getCheckCertificate, &Signer::setCheckCertificate),
         });
         exports.Set("HashedData", ctor);
 
@@ -65,4 +65,13 @@ namespace NodeCades {
         HR_METHOD_ERRORCHECK_RETURN(env, "HashedData hash error: 0x%08X", result);
         return env.Undefined();
     }
+
+    Napi::Value HashedData::getValue(const Napi::CallbackInfo& info){
+        Napi::Env env = info.Env();
+        CAtlString sValue;
+        HRESULT result = this->cadesHashedData->get_Value(sValue);
+        HR_METHOD_ERRORCHECK_RETURN(env, "HashedData get value error: 0x%08X", result);
+        return Napi::String::New(env, sValue.GetString());
+    }
+
 }

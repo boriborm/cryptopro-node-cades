@@ -12,6 +12,7 @@ namespace NodeCades {
         HashedData(const Napi::CallbackInfo& info);
         void setAlgorithm(const Napi::CallbackInfo& info, const Napi::Value& value);
         Napi::Value getAlgorithm(const Napi::CallbackInfo& info);
+        Napi::Value getValue(const Napi::CallbackInfo& info);
         Napi::Value Hash(const Napi::CallbackInfo& info);
 
         boost::shared_ptr<CPPCadesCPHashedDataObject> cadesHashedData;

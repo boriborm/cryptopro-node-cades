@@ -99,10 +99,10 @@ if (testSignHash) {
   hash.algorithm = Cades.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256;
   console.log("Hash algorithm:", hash.algorithm);
   hash.hash(testText);
+  console.log("Hash value:", hash.value);
 
   const signData3 = new Cades.SignedData();
-  signData3.content = testText;
-  let sign = signData3.signHash(hash, signer3, Cades.CADESCOM_CADES_BES, false, Cades.CAPICOM_ENCODE_BASE64);
+  let sign = signData3.signHash(hash, signer3, Cades.CADESCOM_CADES_BES, Cades.CAPICOM_ENCODE_BASE64);
   console.log('signed hash:');
   console.log(sign.toString());
   const signData4 = new Cades.SignedData();

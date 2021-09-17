@@ -158,7 +158,7 @@ namespace NodeCades {
 
       CryptoPro::CBlob blobSignedMessage;
       HRESULT result = this->cadesSignedData->SignHash(signer->cadesSigner, hashedData->cadesHashedData, cadesType, encodingType, &blobSignedMessage);
-      HR_METHOD_ERRORCHECK_RETURN(env, "SignedData signHashed error: 0x%08X", result);
+      HR_METHOD_ERRORCHECK_RETURN(env, "SignedData signHash error: 0x%08X", result);
 
       return Napi::Buffer<char>::Copy(env, (const char *) blobSignedMessage.pbData(), blobSignedMessage.cbData());
 

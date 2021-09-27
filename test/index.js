@@ -109,6 +109,7 @@ if (testSignHash) {
   console.log("verify hash sign:", signData4.verifyHash(hash, sign, Cades.CADESCOM_CADES_BES));
   const signers2 = signData4.signers;
   for (const signer of signers2){
+    console.log('signing time:', signer.signingTime);
     const cert = signer.certificate;
     printCertificate(cert);
   }

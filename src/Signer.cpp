@@ -10,6 +10,9 @@ namespace NodeCades {
         Napi::Function ctor = DefineClass(env, "Signer", {
             InstanceAccessor("certificate", &Signer::getCertificate, &Signer::setCertificate),
             InstanceAccessor("checkCertificate", &Signer::getCheckCertificate, &Signer::setCheckCertificate),
+            InstanceAccessor("signingTime", &Signer::getSigningTime, nullptr),
+            InstanceAccessor("signatureTimeStampTime", &Signer::getSignatureTimeStampTime, nullptr),
+
         });
         exports.Set("Signer", ctor);
 
@@ -73,4 +76,24 @@ namespace NodeCades {
         return Napi::Boolean::New(env, bValue);
     }
 
+    Napi::Value Signer::getSigningTime(const Napi::CallbackInfo& info){
+        Napi::Env env = info.Env();
+        CryptoPro::CDateTime Time;
+        HRESULT result = this->cadesSigner->get_SigningTime(Time);
+        HR_METHOD_ERRORCHECK_RETURN(env, "Signer get signing time error: 0x%08X", result);
+
+        CryptoPro::CStringProxy strproxy = Time.tostring();
+
+        return Napi::String::New(env, strproxy.c_str());
+    }
+    Napi::Value Signer::getSignatureTimeStampTime(const Napi::CallbackInfo& info){
+        Napi::Env env = info.Env();
+        CryptoPro::CDateTime Time;
+        HRESULT result = this->cadesSigner->get_SignatureTimeStampTime(Time);
+        HR_METHOD_ERRORCHECK_RETURN(env, "Signer get signature timestamp time error: 0x%08X", result);
+
+        CryptoPro::CStringProxy strproxy = Time.tostring();
+
+        return Napi::String::New(env, strproxy.c_str());
+    }
 }

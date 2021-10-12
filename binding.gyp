@@ -4,7 +4,7 @@
       "target_name": "NodeCades",
       "cflags_cc": [ "-std=c++11"],
       "cflags!": [ "-Wall","-fno-exceptions" ],
-      "cflags_cc!": [ "-fno-exceptions","-std=gnu++1y" ],
+      "cflags_cc!": [ "-fno-exceptions","-std=gnu++1y"],
       "sources": [
         "./src/addon.cpp",
         "./src/EnvelopedData.cpp",

@@ -21,6 +21,9 @@ namespace NodeCades {
         boost::shared_ptr<CPPCadesCPSignerObject> cadesSigner;
         Napi::Value getSigningTime(const Napi::CallbackInfo& info);
         Napi::Value getSignatureTimeStampTime(const Napi::CallbackInfo& info);
+        void setOptions(const Napi::CallbackInfo& info, const Napi::Value& value);
+        Napi::Value getOptions(const Napi::CallbackInfo& info);
+
      private:
         static Napi::FunctionReference constructor;
     };

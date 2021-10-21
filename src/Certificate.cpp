@@ -63,30 +63,4 @@ namespace NodeCades {
       HR_METHOD_ERRORCHECK_RETURN(env, "Certificate getIssuerName error: 0x%08X", result);
       return Napi::String::New(env, sName.GetString());
     }
-/*
-    void Certificate::printData(){
-      CAtlString sName;
-
-      HRESULT result = this->cadesCert->get_Thumbprint(sName);
-      printf( "Certificate getThumbprint result: 0x%08X \n", result);
-      printf( "Certificate getThumbprint: %s \n", sName.GetString());
-
-      result = this->cadesCert->get_SerialNumber(sName);
-      printf( "Certificate get_SerialNumber result: 0x%08X \n", result);
-      printf( "Certificate get_SerialNumber: %s \n", sName.GetString());
-
-      result = this->cadesCert->get_IssuerName(sName);
-      printf( "Certificate get_IssuerName result: 0x%08X \n", result);
-      printf( "Certificate get_IssuerName: %s \n", sName.GetString());
-
-    }
-*/
 }
-
-/*
-Как из типа Napi::Object получить начальный класс:
-
-Napi::Object obj = info[0].ToObject();
-Certificate* cert = WrappedController::Unwrap(obj);
-
-*/

@@ -10,6 +10,7 @@ namespace NodeCades {
         Napi::Function ctor = DefineClass(env, "Signer", {
             InstanceAccessor("certificate", &Signer::getCertificate, &Signer::setCertificate),
             InstanceAccessor("checkCertificate", &Signer::getCheckCertificate, &Signer::setCheckCertificate),
+            InstanceAccessor("options", &Signer::getOptions, &Signer::setOptions),
             InstanceAccessor("signingTime", &Signer::getSigningTime, nullptr),
             InstanceAccessor("signatureTimeStampTime", &Signer::getSignatureTimeStampTime, nullptr),
 
@@ -67,6 +68,29 @@ namespace NodeCades {
       HRESULT result = this->cadesSigner->put_CheckCertificate(bValue);
       HR_METHOD_ERRORCHECK(env, "Signer set check certificate error: 0x%08X", result);
     }
+
+    Napi::Value Signer::getOptions(const Napi::CallbackInfo& info){
+        Napi::Env env = info.Env();
+        CAPICOM_CERTIFICATE_INCLUDE_OPTION option;
+        HRESULT result = this->cadesSigner->get_Options(&option);
+        HR_METHOD_ERRORCHECK_RETURN(env, "Signer get options error: 0x%08X", result);
+        return Napi::Number::New(env, option);
+    }
+
+    void Signer::setOptions(const Napi::CallbackInfo& info, const Napi::Value& value) {
+      Napi::Env env = info.Env();
+
+      long lOpt = 0;
+      if (value.IsNumber()){
+        lOpt = value.As<Napi::Number>().Uint32Value();
+      }
+
+      CAPICOM_CERTIFICATE_INCLUDE_OPTION opt = (CAPICOM_CERTIFICATE_INCLUDE_OPTION) lOpt;
+
+      HRESULT result = this->cadesSigner->put_Options(opt);
+      HR_METHOD_ERRORCHECK(env, "Signer set options error: 0x%08X", result);
+    }
+
 
     Napi::Value Signer::getCheckCertificate(const Napi::CallbackInfo& info){
         Napi::Env env = info.Env();

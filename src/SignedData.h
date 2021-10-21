@@ -20,6 +20,7 @@ namespace NodeCades {
         Napi::Value SignHash(const Napi::CallbackInfo& info);
         Napi::Value VerifyHash(const Napi::CallbackInfo& info);
         Napi::Value getSigners(const Napi::CallbackInfo& info);
+        Napi::Value EnhanceCades(const Napi::CallbackInfo& info);
      private:
         CPPCadesSignedDataObject* cadesSignedData;
         static Napi::FunctionReference constructor;

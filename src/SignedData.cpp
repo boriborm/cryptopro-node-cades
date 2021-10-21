@@ -13,6 +13,7 @@ namespace NodeCades {
             InstanceMethod("signHash", &SignedData::SignHash),
             InstanceMethod("verifyCades", &SignedData::VerifyCades),
             InstanceMethod("verifyHash", &SignedData::VerifyHash),
+            InstanceMethod("EnhanceCades", &SignedData::EnhanceCades),
             InstanceAccessor("content", &SignedData::getContent, &SignedData::setContent),
             InstanceAccessor("signers", &SignedData::getSigners, nullptr),
         });
@@ -225,5 +226,45 @@ namespace NodeCades {
       }
 
       return signers;
+    }
+
+    Napi::Value SignedData::EnhanceCades(const Napi::CallbackInfo& info) {
+
+      Napi::Env env = info.Env();
+      COUNT_OF_ARGUMENTS_CHECK(info, env, 3);
+
+      int iCadesType = CADESCOM_CADES_DEFAULT;
+
+      if (info[0].IsNumber()) {
+          iCadesType = (int) info[2].As<Napi::Number>().Uint32Value();
+      }
+      CADESCOM_CADES_TYPE cadesType = (CADESCOM_CADES_TYPE)iCadesType;
+
+      std::string szTSAAddress = "";
+      if (info[1].IsString()) {
+        szTSAAddress = info[1].As<Napi::String>().Utf8Value();
+      }
+
+      long lEncodingType = CAPICOM_ENCODE_BASE64;
+      if (info[2].IsNumber()) {
+        lEncodingType = (int) info[2].As<Napi::Number>().Uint32Value();
+      }
+      CAPICOM_ENCODING_TYPE encodingType = (CAPICOM_ENCODING_TYPE)lEncodingType;
+
+      CryptoPro::CBlob blobData;
+
+      HRESULT result = this->cadesSignedData->EnhanceCades(cadesType, CAtlString(szTSAAddress.c_str()), encodingType, &blobData);
+      HR_METHOD_ERRORCHECK_RETURN(env, "SignedData EnhanceCades error: 0x%08X", result);
+
+
+
+      if (encodingType == CAPICOM_ENCODE_BINARY){
+        return Napi::Buffer<char>::Copy(env, (const char *) blobData.pbData(), blobData.cbData());
+      }
+
+      CAtlString sValue = CAtlString((const char *)blobData.pbData(), blobData.cbData());
+
+      return Napi::String::New(env, sValue.GetString());
+
     }
 }

@@ -1,8 +1,8 @@
 const Cades = require('../build/Release/NodeCades.node');
 const testEncryptAndDecrypt = true,
       testCertificates = true,
-      testSignCades=true,
-      testSignHash=true,
+      testSignCades = true,
+      testSignHash = true,
       testCertificateThumbprint = "610A3B2E77EB6B49B6E083603517CFE67A7CB647",
       testText = "123 test Тест!!"
 ;
@@ -103,10 +103,18 @@ if (testSignHash) {
 
   const signData3 = new Cades.SignedData();
   let sign = signData3.signHash(hash, signer3, Cades.CADESCOM_CADES_BES, Cades.CAPICOM_ENCODE_BASE64);
+
+  //const ddd = signData3.EnhanceCades(Cades.CADESCOM_CADES_X_LONG_TYPE_1, "http://cades.iitrust.ru:8777/tsp", Cades.CAPICOM_ENCODE_BASE64);
+  //console.log(ddd);
+
   console.log('signed hash:');
   console.log(sign.toString());
   const signData4 = new Cades.SignedData();
   console.log("verify hash sign:", signData4.verifyHash(hash, sign, Cades.CADESCOM_CADES_BES));
+
+
+
+
   const signers2 = signData4.signers;
   for (const signer of signers2){
     console.log('signing time:', signer.signingTime);

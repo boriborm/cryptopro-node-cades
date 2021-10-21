@@ -46,7 +46,10 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   // _CADESCOM_CADES_TYPE
   exports.Set("CADESCOM_CADES_BES", Napi::Number::New(env, CADESCOM_CADES_BES));
   exports.Set("CADESCOM_CADES_DEFAULT", Napi::Number::New(env, CADESCOM_CADES_DEFAULT));
+  exports.Set("CADESCOM_CADES_X_LONG_TYPE_1", Napi::Number::New(env, CADESCOM_CADES_X_LONG_TYPE_1));
   exports.Set("CADESCOM_PKCS7_TYPE", Napi::Number::New(env, CADESCOM_PKCS7_TYPE));
+
+
 
   //_CAPICOM_HASH_ALGORITHM
   exports.Set("CAPICOM_HASH_ALGORITHM_SHA1", Napi::Number::New(env, CAPICOM_HASH_ALGORITHM_SHA1));

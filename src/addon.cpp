@@ -7,6 +7,34 @@
 #include "HashedData.h"
 #include "SignedData.h"
 
+Napi::Value GetErrorMessage(const Napi::CallbackInfo& info){
+    Napi::Env env = info.Env();
+    unsigned int dwErr = GetLastError();
+
+    if (info[0].IsNumber()) {
+        dwErr = (unsigned int) info[0].As<Napi::Number>().Uint32Value();
+    }
+
+    if (dwErr == S_OK){
+        return Napi::String::New(env, "No Errors");
+    }
+
+    char buf [1024];
+    DWORD dwFlagsMod = FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_HMODULE;
+    BOOL dwRet = CadesFormatMessage(dwFlagsMod, 0, dwErr, 0, buf, sizeof(buf), NULL);
+    if (!dwRet)
+    {
+        DWORD dwFlagsSys = FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_FROM_SYSTEM;
+        dwRet = FormatMessage(dwFlagsSys, 0, dwErr, 0, buf, sizeof(buf), NULL);
+        if (!dwRet){
+            return Napi::String::New(env, "Error description not found");
+        }
+    }
+
+    std::string buffAsStdStr = buf;
+    return Napi::String::New(env, buffAsStdStr);
+
+}
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
 
@@ -71,6 +99,8 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   exports.Set("CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT", Napi::Number::New(env, CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT));
   exports.Set("CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN", Napi::Number::New(env, CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN));
   exports.Set("CAPICOM_CERTIFICATE_INCLUDE_END_ENTITY_ONLY", Napi::Number::New(env, CAPICOM_CERTIFICATE_INCLUDE_END_ENTITY_ONLY));
+
+  exports.Set("GetErrorMessage", Napi::Function::New(env, GetErrorMessage));
 
   return exports;
 

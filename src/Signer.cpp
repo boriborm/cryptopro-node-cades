@@ -68,13 +68,12 @@ namespace NodeCades {
       HRESULT result = this->cadesSigner->put_CheckCertificate(bValue);
       HR_METHOD_ERRORCHECK(env, "Signer set check certificate error: 0x%08X", result);
     }
-
-    Napi::Value Signer::getOptions(const Napi::CallbackInfo& info){
+    Napi::Value Signer::getCheckCertificate(const Napi::CallbackInfo& info){
         Napi::Env env = info.Env();
-        CAPICOM_CERTIFICATE_INCLUDE_OPTION option;
-        HRESULT result = this->cadesSigner->get_Options(&option);
-        HR_METHOD_ERRORCHECK_RETURN(env, "Signer get options error: 0x%08X", result);
-        return Napi::Number::New(env, option);
+        BOOL bValue = 0;
+        HRESULT result = this->cadesSigner->get_CheckCertificate(bValue);
+        HR_METHOD_ERRORCHECK_RETURN(env, "Signer get check certificate error: 0x%08X", result);
+        return Napi::Boolean::New(env, bValue);
     }
 
     void Signer::setOptions(const Napi::CallbackInfo& info, const Napi::Value& value) {
@@ -91,13 +90,12 @@ namespace NodeCades {
       HR_METHOD_ERRORCHECK(env, "Signer set options error: 0x%08X", result);
     }
 
-
-    Napi::Value Signer::getCheckCertificate(const Napi::CallbackInfo& info){
+    Napi::Value Signer::getOptions(const Napi::CallbackInfo& info){
         Napi::Env env = info.Env();
-        BOOL bValue = 0;
-        HRESULT result = this->cadesSigner->get_CheckCertificate(bValue);
-        HR_METHOD_ERRORCHECK_RETURN(env, "Signer get check certificate error: 0x%08X", result);
-        return Napi::Boolean::New(env, bValue);
+        CAPICOM_CERTIFICATE_INCLUDE_OPTION option;
+        HRESULT result = this->cadesSigner->get_Options(&option);
+        HR_METHOD_ERRORCHECK_RETURN(env, "Signer get options error: 0x%08X", result);
+        return Napi::Number::New(env, option);
     }
 
     Napi::Value Signer::getSigningTime(const Napi::CallbackInfo& info){

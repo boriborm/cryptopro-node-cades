@@ -10,6 +10,7 @@ const testEncryptAndDecrypt = true,
 let e;
 let certs;
 
+
 const openStore = ()=>{
   const store = new Cades.Store();
   store.open(Cades.CADESCOM_CONTAINER_STORE, Cades.CAPICOM_MY_STORE, Cades.CAPICOM_STORE_OPEN_READ_ONLY);
